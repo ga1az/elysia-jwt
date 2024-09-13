@@ -1,5 +1,7 @@
 # @elysiajs/static
 
+> This package is a fork of [@elysiajs/jwt](https://github.com/elysiajs/elysia-jwt) and is not maintained by Elysia.JS team. This fork is created to fix iat validation [issue](https://github.com/elysiajs/elysia-jwt/issues/52)
+
 Plugin for [Elysia](https://github.com/elysiajs/elysia) for using JWT Authentication.
 
 ## Installation
@@ -11,37 +13,37 @@ bun add @elysiajs/jwt
 ## Example
 
 ```typescript
-import { Elysia, t } from 'elysia';
-import { jwt } from '@elysiajs/jwt';
-import { cookie } from '@elysiajs/cookie';
+import { Elysia, t } from 'elysia'
+import { jwt } from '@elysiajs/jwt'
+import { cookie } from '@elysiajs/cookie'
 
 const app = new Elysia()
-  .use(
-    jwt({
-      name: 'jwt',
-      // This should be Environment Variable
-      secret: 'MY_SECRETS',
-    })
-  )
-  .use(cookie())
-  .get('/sign/:name', async ({ jwt, cookie, setCookie, params }) => {
-    setCookie('auth', await jwt.sign(params), {
-      httpOnly: true,
-    });
+	.use(
+		jwt({
+			name: 'jwt',
+			// This should be Environment Variable
+			secret: 'MY_SECRETS'
+		})
+	)
+	.use(cookie())
+	.get('/sign/:name', async ({ jwt, cookie, setCookie, params }) => {
+		setCookie('auth', await jwt.sign(params), {
+			httpOnly: true
+		})
 
-    return `Sign in as ${params.name}`;
-  })
-  .get('/profile', async ({ jwt, set, cookie: { auth } }) => {
-    const profile = await jwt.verify(auth);
+		return `Sign in as ${params.name}`
+	})
+	.get('/profile', async ({ jwt, set, cookie: { auth } }) => {
+		const profile = await jwt.verify(auth)
 
-    if (!profile) {
-      set.status = 401;
-      return 'Unauthorized';
-    }
+		if (!profile) {
+			set.status = 401
+			return 'Unauthorized'
+		}
 
-    return `Hello ${profile.name}`;
-  })
-  .listen(8080);
+		return `Hello ${profile.name}`
+	})
+	.listen(8080)
 ```
 
 ## Config
